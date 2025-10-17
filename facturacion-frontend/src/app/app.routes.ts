@@ -29,7 +29,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((c) => c.DashboardComponent),
       },
-      // --- AÑADE ESTA LÍNEA ---
       {
         path: 'products',
         loadComponent: () =>
@@ -51,7 +50,6 @@ export const routes: Routes = [
             (c) => c.InvoiceListComponent
           ),
       },
-      // ------------------------
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

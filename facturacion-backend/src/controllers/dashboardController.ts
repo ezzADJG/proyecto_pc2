@@ -31,7 +31,7 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       productsCount: parseInt(productsCountResult.rows[0].count, 10),
     });
   } catch (error) {
-    console.error("Error detallado del backend:", error); // <-- Esto te mostrará el error en la consola
+    console.error("Error detallado del backend:", error);
     res.status(500).json({ message: "Error al obtener las estadísticas." });
   }
 };

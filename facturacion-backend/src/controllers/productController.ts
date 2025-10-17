@@ -3,7 +3,6 @@ import pool from "../config/db";
 import { AuthRequest } from "../middlewares/authMiddleware";
 import { v4 as uuidv4 } from "uuid";
 
-// Crear un producto
 export const createProduct = async (req: AuthRequest, res: Response) => {
   const { code, name, price, stock } = req.body;
   const userId = req.user?.id;
@@ -23,7 +22,6 @@ export const createProduct = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// Obtener todos los productos del usuario logueado
 export const getMyProducts = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   try {
@@ -38,7 +36,6 @@ export const getMyProducts = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// Obtener un producto por su código (para el autocompletado)
 export const getProductByCode = async (req: AuthRequest, res: Response) => {
   const { code } = req.params;
   const userId = req.user?.id;
@@ -58,7 +55,7 @@ export const getProductByCode = async (req: AuthRequest, res: Response) => {
 };
 
 export const deleteProduct = async (req: AuthRequest, res: Response) => {
-  const { id } = req.params; // Obtenemos el ID desde los parámetros de la URL
+  const { id } = req.params; 
   const userId = req.user?.id;
 
   try {
@@ -67,7 +64,6 @@ export const deleteProduct = async (req: AuthRequest, res: Response) => {
       [id, userId]
     );
 
-    // Si rowCount es 0, significa que no se encontró ningún producto con ese ID para ese usuario.
     if (result.rowCount === 0) {
       return res
         .status(404)
@@ -76,7 +72,6 @@ export const deleteProduct = async (req: AuthRequest, res: Response) => {
         });
     }
 
-    // El código 204 "No Content" es la respuesta estándar para un DELETE exitoso.
     res.status(204).send();
   } catch (error) {
     console.error(error);

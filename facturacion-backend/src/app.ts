@@ -11,9 +11,8 @@ dotenv.config();
 
 const app = express();
 
-// Middlewares
-app.use(cors()); // Permite peticiones desde el frontend
-app.use(express.json()); // Para parsear body de peticiones como JSON
+app.use(cors()); 
+app.use(express.json()); 
 
 // Rutas de la API
 app.get("/api", (req, res) => {

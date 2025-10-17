@@ -4,8 +4,6 @@ import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } fr
 import { Product, ProductService } from '../../../core/services/product.service';
 import { InvoiceService } from '../../../core/services/invoice.service';
 import { InvoiceViewComponent } from '../invoice-view/invoice-view.component';
-
-// Importaciones de Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -44,7 +42,6 @@ export class InvoiceFormComponent {
   invoiceForm: FormGroup;
   displayedColumns: string[] = ['code', 'name', 'quantity', 'price', 'subtotal', 'actions'];
 
-  // Usamos signals para los totales, para que se actualicen automáticamente
   subtotal = signal(0);
   igv = signal(0);
   total = signal(0);
@@ -53,33 +50,28 @@ export class InvoiceFormComponent {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
   private externalApiService = inject(ExternalApiService);
-  private invoiceService = inject(InvoiceService); // <-- Inyecta el servicio de factura
+  private invoiceService = inject(InvoiceService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
   @ViewChild('invoiceTable') table!: MatTable<any>;
 
   constructor() {
     this.invoiceForm = this.fb.group({
-      // Formulario para los datos del cliente
       customer: this.fb.group({
         docType: ['DNI', Validators.required],
         docNumber: ['', Validators.required],
         name: ['', Validators.required],
       }),
-      // Formulario para añadir un nuevo item
       newItem: this.fb.group({
         productCode: [''],
         quantity: [1, [Validators.required, Validators.min(1)]],
       }),
-      // Formulario para la lista de items de la factura
       items: this.fb.array([], Validators.required),
     });
 
-    // Escuchamos los cambios en la lista de items para recalcular los totales
     this.items.valueChanges.subscribe(() => this.calculateTotals());
   }
 
-  // Getter para acceder fácilmente al FormArray de items
   get items(): FormArray {
     return this.invoiceForm.get('items') as FormArray;
   }
@@ -126,7 +118,6 @@ export class InvoiceFormComponent {
 
           this.items.push(newItemForm);
 
-          // 3. ¡LA LÍNEA CLAVE! Dile a la tabla que se actualice
           if (this.table) {
             this.table.renderRows();
           }
@@ -167,7 +158,6 @@ export class InvoiceFormComponent {
       return;
     }
 
-    // Construimos el objeto que enviaremos al backend
     const customerData = this.invoiceForm.get('customer')?.value;
     const itemsData = this.items.getRawValue();
 
@@ -177,7 +167,6 @@ export class InvoiceFormComponent {
       customer_document: customerData.docNumber,
       total: this.total(),
       items: itemsData.map((item) => ({
-        // Mapeamos para enviar solo los datos necesarios
         code: item.code,
         name: item.name,
         quantity: item.quantity,
@@ -185,11 +174,9 @@ export class InvoiceFormComponent {
       })),
     };
 
-    // Llamamos al servicio para crear la factura
     this.invoiceService.createInvoice(payload).subscribe({
       next: (response) => {
         this.showNotification('Factura generada con éxito!');
-        // Opcional: Redirigir o limpiar el formulario
         const viewData = {
           ...payload,
           subtotal: this.subtotal(),
@@ -197,13 +184,11 @@ export class InvoiceFormComponent {
           emissionDate: new Date(),
         };
 
-        // Abrimos el diálogo con los datos
         this.dialog.open(InvoiceViewComponent, {
           width: '800px',
           data: viewData,
         });
 
-        // Limpiamos el formulario principal
         this.invoiceForm.reset();
         this.items.clear();
         if (this.table) {

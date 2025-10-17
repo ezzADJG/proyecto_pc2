@@ -62,7 +62,6 @@ export class InvoiceListComponent implements OnInit {
         const subtotal = total / 1.18;
         const igv = total - subtotal;
 
-        // 3. Construimos el objeto de datos final con los items ya transformados
         const viewData = {
           invoice_type: invoiceDetails.invoice_type,
           customer_name: invoiceDetails.customer_name,

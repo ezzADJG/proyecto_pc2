@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Definimos una interfaz para tipar nuestros productos y tener un código más limpio
 export interface Product {
   id?: string;
   code: string;
@@ -34,6 +33,4 @@ export class ProductService {
   deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
-  // TODO: Añadir métodos para actualizar y eliminar productos
 }

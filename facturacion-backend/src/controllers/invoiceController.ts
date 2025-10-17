@@ -10,9 +10,8 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
   const client = await pool.connect();
 
   try {
-    await client.query("BEGIN"); // Iniciar transacción
+    await client.query("BEGIN");
 
-    // 1. Insertar la factura principal
     const invoiceId = uuidv4();
     const invoiceResult = await client.query(
       "INSERT INTO invoices (id, invoice_type, customer_name, customer_document, total, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
@@ -20,10 +19,8 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
     );
     const newInvoiceId = invoiceResult.rows[0].id;
 
-    // 2. Insertar los items y actualizar el stock
     for (const item of items) {
       const itemId = uuidv4();
-      // --- MODIFICA ESTA CONSULTA ---
       await client.query(
         "INSERT INTO invoice_items (id, invoice_id, product_name, quantity, unit_price, subtotal, product_code) VALUES ($1, $2, $3, $4, $5, $6, $7)",
         [
@@ -42,23 +39,22 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
       );
     }
 
-    await client.query("COMMIT"); // Confirmar transacción
+    await client.query("COMMIT"); 
     res
       .status(201)
       .json({ message: "Factura creada con éxito.", invoiceId: newInvoiceId });
   } catch (error) {
-    await client.query("ROLLBACK"); // Revertir en caso de error
+    await client.query("ROLLBACK"); 
     console.error(error);
     res.status(500).json({ message: "Error al crear la factura." });
   } finally {
-    client.release(); // Liberar la conexión
+    client.release(); 
   }
 };
 
 export const getMyInvoices = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   try {
-    // Seleccionamos todas las facturas del usuario, ordenadas por fecha
     const result = await pool.query(
       "SELECT id, invoice_type, customer_name, customer_document, total, created_at FROM invoices WHERE user_id = $1 ORDER BY created_at DESC",
       [userId]
@@ -71,11 +67,10 @@ export const getMyInvoices = async (req: AuthRequest, res: Response) => {
 };
 
 export const getInvoiceById = async (req: AuthRequest, res: Response) => {
-  const { id } = req.params; // ID de la factura
+  const { id } = req.params; 
   const userId = req.user?.id;
 
   try {
-    // 1. Obtenemos los datos principales de la factura
     const invoiceResult = await pool.query(
       "SELECT * FROM invoices WHERE id = $1 AND user_id = $2",
       [id, userId]
@@ -85,14 +80,13 @@ export const getInvoiceById = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: "Factura no encontrada." });
     }
 
-    // 2. Obtenemos los items (productos) de esa factura
     const itemsResult = await pool.query(
       "SELECT * FROM invoice_items WHERE invoice_id = $1",
       [id]
     );
 
     const invoice = invoiceResult.rows[0];
-    invoice.items = itemsResult.rows; // Añadimos los items al objeto de la factura
+    invoice.items = itemsResult.rows;
 
     res.json(invoice);
   } catch (error) {

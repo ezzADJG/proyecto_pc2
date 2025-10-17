@@ -18,14 +18,13 @@
 }
 
 .stat-icon {
-  transform: scale(1.5); // Hace el ícono un poco más grande
-  color: #3f51b5; // Color primario
+  transform: scale(1.5);
+  color: #3f51b5;
   margin-bottom: 10px;
 }
 
-// Cambia el selector para que afecte correctamente el div del avatar
 ::ng-deep .stat-card .mat-mdc-card-header-text {
-  margin: 0 !important; // Elimina el margen por defecto para centrar
+  margin: 0 !important;
 }
 
 .charts-section {

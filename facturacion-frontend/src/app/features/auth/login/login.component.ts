@@ -2,8 +2,6 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-// Importaciones de Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,8 +15,8 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule, // Para usar routerLink
-    ReactiveFormsModule, // Módulo para formularios reactivos
+    RouterModule, 
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,9 +28,8 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  hidePassword = true; // Para el botón de mostrar/ocultar contraseña
+  hidePassword = true;
 
-  // Inyección de dependencias de la forma moderna
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -46,7 +43,7 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      return; // Si el formulario no es válido, no hacer nada
+      return;
     }
 
     this.authService.login(this.loginForm.value).subscribe({
@@ -54,12 +51,11 @@ export class LoginComponent {
         console.log('Login exitoso!', response);
         // Guardar el token en el almacenamiento local
         localStorage.setItem('token', response.token);
-        // Redirigir al dashboard (crearemos esta ruta más adelante)
+        // Redirigir al dashboard
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error('Error en el login:', err);
-        // Aquí podrías mostrar una notificación de error al usuario
       }
     });
   }

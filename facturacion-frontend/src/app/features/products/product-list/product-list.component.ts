@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product, ProductService } from '../../../core/services/product.service';
 
-// Importaciones de Angular Material
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +11,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-// Crearemos este componente de confirmación en un momento
 // import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -64,10 +62,7 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  // --- AÑADE ESTA FUNCIÓN ---
   deleteProduct(product: Product): void {
-    // --- Lógica de Confirmación (Opcional pero recomendado) ---
-    // Por ahora, borraremos directamente. Luego podemos añadir un diálogo.
     if (!confirm(`¿Estás seguro de que quieres eliminar el producto "${product.name}"?`)) {
       return;
     }
@@ -75,7 +70,6 @@ export class ProductListComponent implements OnInit {
     if (product.id) {
       this.productService.deleteProduct(product.id).subscribe({
         next: () => {
-          // Actualiza la lista en el frontend para reflejar el cambio
           this.products.update((products) => products.filter((p) => p.id !== product.id));
           this.showNotification('Producto eliminado con éxito.');
         },

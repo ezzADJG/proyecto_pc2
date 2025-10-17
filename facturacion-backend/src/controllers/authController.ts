@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import pool from "../config/db";
-import { v4 as uuidv4 } from "uuid"; // Para generar IDs
-
+import { v4 as uuidv4 } from "uuid"; 
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -57,7 +56,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: "1d", // El token expira en 1 día
+      expiresIn: "1d", 
     });
 
     res.json({

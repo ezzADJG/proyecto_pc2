@@ -1,0 +1,20 @@
+<div class="dashboard-container">
+  <h1>¡Bienvenido de vuelta!</h1>
+  <p class="subtitle">Aquí tienes un resumen de tu actividad reciente.</p>
+
+  <mat-grid-list cols="4" rowHeight="150px" gutterSize="20px">
+    <mat-grid-tile *ngFor="let stat of stats()">
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <div mat-card-avatar>
+            <mat-icon class="stat-icon">{{ stat.icon }}</mat-icon>
+          </div>
+          <mat-card-title>
+            {{ stat.isCurrency ? (stat.value | currency : 'S/ ') : stat.value }}
+          </mat-card-title>
+          <mat-card-subtitle>{{ stat.title }}</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

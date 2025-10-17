@@ -1,0 +1,67 @@
+<div class="view-header">
+  <h2 mat-dialog-title>Comprobante Generado</h2>
+  <div>
+    <button mat-icon-button (click)="downloadAsPDF()" matTooltip="Descargar PDF">
+      <mat-icon>picture_as_pdf</mat-icon>
+    </button>
+    <button mat-icon-button (click)="close()" matTooltip="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-dialog-content>
+  <div #invoiceContent class="invoice-box">
+    <header>
+      <h1>{{ data.invoice_type }} ELECTRÓNICA</h1>
+      <div class="company-details">
+        <div><strong>Mi Empresa S.A.C.</strong></div>
+        <div>RUC: 20123456789</div>
+        <div>Av. Principal 123, Lima</div>
+      </div>
+    </header>
+
+    <section class="customer-details">
+      <h3>Cliente:</h3>
+      <p><strong>Nombre/Razón Social:</strong> {{ data.customer_name }}</p>
+      <p>
+        <strong>{{ data.invoice_type === 'BOLETA' ? 'DNI' : 'RUC' }}:</strong>
+        {{ data.customer_document }}
+      </p>
+      <p><strong>Fecha de Emisión:</strong> {{ data.emissionDate | date : 'dd/MM/yyyy' }}</p>
+    </section>
+
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Descripción</th>
+          <th>Cant.</th>
+          <th>P. Unit.</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of data.items">
+          <td>{{ item.code }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.price | currency : 'S/ ' }}</td>
+          <td>{{ item.price * item.quantity | currency : 'S/ ' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <section class="totals">
+      <div>
+        <span>SUBTOTAL:</span> <span>{{ data.subtotal | currency : 'S/ ' }}</span>
+      </div>
+      <div>
+        <span>IGV (18%):</span> <span>{{ data.igv | currency : 'S/ ' }}</span>
+      </div>
+      <div class="grand-total">
+        <span>TOTAL:</span> <span>{{ data.total | currency : 'S/ ' }}</span>
+      </div>
+    </section>
+  </div>
+</mat-dialog-content>
